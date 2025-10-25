@@ -3,9 +3,9 @@ Worker Node = Data Plane     = It is executing the actions.
 
 A pod is deployed over Worker node(Data Plane). 
 Worker Node have following components: 
-  *)Kubelet
-  *)Kubeproxy
-  *)Container Runtime 
+  1)Kubelet
+  2)Kubeproxy
+  3)Container Runtime 
 
 *)Kubelet: It is the responsibility of kubelet to create and maintain Pods and make sure that pod is always up and running. If it found that a pod is going down ,because of auto-healing feature, it will immediately inform the component(API server) in Control plane to take action and do something for this pod to make it up and running.
 
@@ -18,11 +18,11 @@ Components of Data plane are sufficient to run the application; Kubelet is deplo
 Because Cluster is a standard for an enterprise level application. So when a user is requesting to create pods, Who will decide on which node this pod should be created. There should be a heart , core component in K8s that has to deal with such instructions. 
 
 Master Node (Control Plane) have following components: 
-  *)API server
-  *)etcd
-  *)Kube-Scheduler
-  *)Controller Manager
-  *)Cloud Controller manager
+  1)API server
+  2)etcd
+  3)Kube-Scheduler
+  4)Controller Manager
+  5)Cloud Controller manager
 
 *)API Server: This is the Heart or core component of the Kubernetes. It decides on which node the pod should be deployed(node-1, node-2 or node-3). Similarly there are many such instructions like Security related configurations etc which are dealt by API server. It exposes the kubernetes to the external world. It is the one which basically takes all the requests from external world. 
 
