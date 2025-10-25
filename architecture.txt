@@ -1,0 +1,35 @@
+Master Node = Control Plane  = It is controlling the actions.
+Worker Node = Data Plane     = It is executing the actions.
+
+A pod is deployed over Worker node(Data Plane). 
+Worker Node have following components: 
+  *)Kubelet
+  *)Kubeproxy
+  *)Container Runtime 
+
+*)Kubelet: It is the responsibility of kubelet to create and maintain Pods and make sure that pod is always up and running. If it found that a pod is going down ,because of auto-healing feature, it will immediately inform the component(API server) in Control plane to take action and do something for this pod to make it up and running.
+
+*)Container Runtime : In order to run a Pod, it requires a Execution environment which is provided by container runtime in Kubernetes. But it is not restricted to Dockershim only. There are other options such as containerd, cri-o are available which are competitor to dockershim. Kubernetes has a standard called as container interface, Any of the suitable container runtime which implements and supports this container interface can be utilised in Kubernetes.
+
+*)Kubeproxy: This is the component in Kubernetes which provides Networking. For each pod created over Kubernetes, it generates and allocates an IP address to pods. It uses IP tables concept in the Linux machine for networking related configuration. To distribute traffic(requests) to pods , this requires a load balancing ability which is by default provided by kubeproxy. 
+    
+Components of Data plane are sufficient to run the application; Kubelet is deploying the pod, Kubeproxy is providing networking and load balancing to pods and Container runtime is providing the Execution environment to pods. Then why do we require control plane?
+
+Because Cluster is a standard for an enterprise level application. So when a user is requesting to create pods, Who will decide on which node this pod should be created. There should be a heart , core component in K8s that has to deal with such instructions. 
+
+Master Node (Control Plane) have following components: 
+  *)API server
+  *)etcd
+  *)Kube-Scheduler
+  *)Controller Manager
+  *)Cloud Controller manager
+
+*)API Server: This is the Heart or core component of the Kubernetes. It decides on which node the pod should be deployed(node-1, node-2 or node-3). Similarly there are many such instructions like Security related configurations etc which are dealt by API server. It exposes the kubernetes to the external world. It is the one which basically takes all the requests from external world. 
+
+*)Scheduler: It is responsible to schedule pods and resources on kubernetes. Node on which pod is to be deployed is decided by API server and resources are scheduled by kube-scheduler. It receives the information from API server on which node to deploy resources.
+
+*)ETCD: It is the component which is the backing store of entire kubernetes cluster. It basically stores entire kubernetes cluster information as objects (i.e key-value pair). Without etcd, we can't have any data related to kubernetes cluster. It is very useful while restoring and upgrading the K8s cluster.
+
+*)Controller Manager: Kubernetes can auto scale pods when there is high traffic. This is possible because of replica set controller which ensures that pods are running as per the replica count mentioned in yaml file. There are many such controllers on kubernetes which serves different purposes. Controller Manager ensures that these controllers are working fine in kubernetes. It manages the inbuilt controllers in K8s.
+
+*)Cloud Controller Manager: When kubernetes cluster is running on a cloud platform such AWS(EKS), Azure(AKS), GCP(GKE) etc , If a user has requested to create load balancer, create storage on kubernetes cluster, kubernetes should be able to convert this request into API call understandable by cloud platform, which k8s can't do by default. Hence there is a component in kubernetes known as Cloud Controller Manager which translates user requests into API call understandable by cloud platform. If K8s cluster is deployed on On-Premises Data center, then there is no need of CCM. If iam coming up with a new cloud platform, Then I have to submit a pull request to opensource CCM GitHub repository to add my cloud platform logic , so that K8s can understand to create and deploy resources on my cloud platform. 
